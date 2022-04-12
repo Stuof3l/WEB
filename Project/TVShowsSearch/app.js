@@ -18,14 +18,22 @@ input.addEventListener('submit',async (e)=>{
 //     console.log(res.data);
 // })
 const makeImage = (shows)=> {
+    let oldDiv = document.querySelectorAll("div");
+    if (oldDiv) {
+        for(let oldOneDiv of oldDiv) {
+            oldOneDiv.remove();
+        }  
+    }
     for (let result of shows) {
         if (result.show.image) {
-            // const newDiv = document.createElement("DIV");
-            // const label = document.createElement("SPAN");
-            // label.innerText = result.show.name;
+            const newDiv = document.createElement("DIV");
+            const label = document.createElement("SPAN");
+            label.innerText = result.show.name;
             const img = document.createElement("IMG");
             img.src = result.show.image.medium;
-            document.body.append(img)
+            newDiv.appendChild(img);
+            newDiv.appendChild(label);
+            document.body.append(newDiv)
         }
     }
 
