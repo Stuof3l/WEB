@@ -3,11 +3,12 @@ input.addEventListener('submit',async (e)=>{
     e.preventDefault();
     const searchTerm = input.elements.query.value;
     try {
-        const res = await axios.get(`https://api.tvmaze.com/search/shows?q=${searchTerm}`);
+        const config = { params: { q: searchTerm } }
+        const res = await axios.get(`http://api.tvmaze.com/search/shows`, config);
         makeImage(res.data)
-        form.elements.query.value = '';
+        input.elements.query.value = '';
     } catch {
-        console.log("ERROR!")
+        alert("ERROR!");
     }
 })
 // input.addEventListener('submit',async (e)=>{
@@ -21,11 +22,11 @@ const makeImage = (shows)=> {
         if (result.show.image) {
             // const newDiv = document.createElement("DIV");
             // const label = document.createElement("SPAN");
-            // label.innerText = result.show.
+            // label.innerText = result.show.name;
             const img = document.createElement("IMG");
             img.src = result.show.image.medium;
             document.body.append(img)
         }
     }
-    
+
 }
