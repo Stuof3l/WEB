@@ -6,35 +6,33 @@ const Campground = require('./models/campground');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
-    // useCreateIndex: true,
+    useCreateIndex: true,
     useUnifiedTopology: true
-})
+});
 
 const db = mongoose.connection;
-db.on("error", console.error.bind(console, 'connection error:'));
-db.once('open', ()=>{
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
     console.log("Database connected");
 });
 
 const app = express();
 
-// setup view engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
 
-app.use(express.urlencoded({extended: true}));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'))
+
+app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
-app.get('/', (req, res)=>{
-    // res.send("HELLO FROM YELPCAMP")
-    res.render('home');
-})
 
-app.get('/campgrounds', async (req, res)=>{
+app.get('/', (req, res) => {
+    res.render('home')
+});
+app.get('/campgrounds', async (req, res) => {
     const campgrounds = await Campground.find({});
     res.render('campgrounds/index', { campgrounds })
-})
-
+});
 app.get('/campgrounds/new', (req, res) => {
     res.render('campgrounds/new');
 })
@@ -68,6 +66,7 @@ app.delete('/campgrounds/:id', async (req, res) => {
 })
 
 
+
 app.listen(3000, () => {
-    console.log("Serving ON PORT 3000!")
+    console.log('Serving on port 3000')
 })
