@@ -1,0 +1,15 @@
+h1 {
+    background-color: #baa587;
+    border: 1px solid #997b66;
+    display: inline;
+}
+
+span {
+    background-color: #b58463;
+    border: 1px solid #797d62;
+    display: block;
+}
+
+p {
+    background-color: #f1dca7;
+}

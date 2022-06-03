@@ -107,6 +107,15 @@ app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async(req, res) 
     res.redirect(`/campgrounds/${campground._id}`);
 }))
 
+app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async(req, res)=>{
+    const { id, reviewId } = req.params;
+    // The $pull operator removes from an existing array all instances of a value or values that match a specified condition.
+    // https://www.mongodb.com/docs/manual/reference/operator/update/pull/#mongodb-update-up.-pull
+    await Campground.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/campgrounds/${id}`);
+})) 
+
 app.all('*', (req, res, next)=>{
     // //set the appropriate HTTP header
     // res.setHeader('Content-Type', 'text/html');
