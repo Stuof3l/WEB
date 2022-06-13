@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const review = require('./review');
+const Review = require('./review');
 // Each schema maps to a MongoDB collection 
 // and defines the shape of the documents within that collection.
 const Schema = mongoose.Schema;
