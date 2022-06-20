@@ -10,6 +10,9 @@ const flash = require('connect-flash');
 // error handling
 const expressError = require('./utils/expressError');
 const methodOverride = require('method-override');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+
 // express.Router
 const campgrounds = require('./routes/campgrounds');
 const reviews = require('./routes/reviews')
@@ -52,6 +55,9 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig));
 app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
