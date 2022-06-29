@@ -2349,6 +2349,8 @@ The `res` object represents the HTTP response that an Express app sends when it 
 
 ## 11.4 Router
 
+### 11.4.1 express.Router
+
 A `router` object is an isolated instance of middleware and routes. You can think of it as a “mini-application,” capable only of performing middleware and routing functions. Every Express application has a built-in app router.
 
 A router behaves like middleware itself, so you can use it as an argument to [app.use()](https://expressjs.com/en/4x/api.html#app.use) or as the argument to another router’s [use()](https://expressjs.com/en/4x/api.html#router.use) method.
@@ -2375,6 +2377,13 @@ router.get('/events', function (req, res, next) {
 // only requests to /calendar/* will be sent to our "router"
 app.use('/calendar', router)
 ```
+
+与普通的express().get()的区别
+1、根据不同功能，利用express.Router()中的get去创建接口，导出不同功能接口模块
+2、通过express().use()对功能接口进行接口路径拼接
+3、页面调用接口，需要加上use中拼接的第一个参数
+
+
 
 ## 11.5 Routing (Express Path Params)
 
@@ -3091,6 +3100,48 @@ app.get('/secret', verifyPassword, (req, res) => {
     res.send('MY SECRET IS: Sometimes I wear headphones in public so I dont have to talk to anyone')
 })
 ```
+
+
+
+# 16 Cookie and Session
+
+## 16.1 Cookie
+
+
+
+## 16.2 Session
+
+Cookies and URL parameters are both suitable ways to transport data between the client and the server. But they are both readable and on the client side. Sessions solve exactly this problem. You assign the client an ID and it makes all further requests using that ID. Information associated with the client is stored on the server linked to this ID.
+
+
+
+```js
+var express = require('express');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+
+var app = express();
+
+app.use(cookieParser());
+app.use(session({secret: "Shh, its a secret!"}));
+
+app.get('/', function(req, res){
+   if(req.session.page_views){
+      req.session.page_views++;
+      res.send("You visited this page " + req.session.page_views + " times");
+   } else {
+      req.session.page_views = 1;
+      res.send("Welcome to this page for the first time!");
+   }
+});
+app.listen(3000);
+```
+
+What the above code does is, when a user visits the site, it creates a new session for the user and assigns them a cookie. Next time the user comes, the cookie is checked and the **page_view** session variable is updated accordingly.
+
+
+
+
 
 
 

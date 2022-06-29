@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <template>
+        <div>
+          <b-form-rating v-model="value"></b-form-rating>
+          <p class="mt-2">Value: {{ value }}</p>
+        </div>
+    </template>
+      
+      <script>
+        export default {
+          data() {
+            return {
+              value: null
+            }
+          }
+        }
+      </script>
+</body>
+</html>
