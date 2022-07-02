@@ -1,3 +1,10 @@
+// Node.js assumes it's always running in a development environment.
+if(process.env.NODE_ENV !== "production") {
+    // dotenv loads environment variables from a .env file into process.env. 
+    // Storing configuration in the environment separate from code
+    require('dotenv').config();
+}
+
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');

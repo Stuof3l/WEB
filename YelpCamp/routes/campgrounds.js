@@ -4,12 +4,20 @@ const campgrounds = require('../controllers/campgrounds')
 const catchAsync = require('../utils/catchAsync');
 const Campground = require('../models/campground');
 const { isLoggedIn, isAuthor, validateCampground } = require('../middleware');
-const campground = require('../models/campground');
+// Multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files.
+const multer = require('multer');
+const {storage} = require('../cloudinary');
+const upload = multer({ storage });
 
 // use the router.route() function to avoid duplicate route naming as well as typing errors
 router.route('/')
     .get(catchAsync(campgrounds.index))
-    .post(isLoggedIn, validateCampground, catchAsync(campgrounds.createCampground));
+    // .post(isLoggedIn, upload.array('image'), validateCampground, catchAsync(campgrounds.createCampground));
+    .post(upload.array('image', (req, res) => {
+        cosole.log(req.body, req.files);
+        res.send("IT WORKDED");
+    }))
+    
 
 // this line needs to go before /:id, or it will be considered as an id
 router.get('/new', isLoggedIn, campgrounds.renderNewForm);
