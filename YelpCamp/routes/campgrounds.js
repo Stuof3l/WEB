@@ -12,11 +12,11 @@ const upload = multer({ storage });
 // use the router.route() function to avoid duplicate route naming as well as typing errors
 router.route('/')
     .get(catchAsync(campgrounds.index))
-    // .post(isLoggedIn, upload.array('image'), validateCampground, catchAsync(campgrounds.createCampground));
-    .post(upload.array('image', (req, res) => {
-        cosole.log(req.body, req.files);
-        res.send("IT WORKDED");
-    }))
+    .post(isLoggedIn, upload.array('image'), validateCampground, catchAsync(campgrounds.createCampground));
+    // .post(upload.array('image'), (req, res) => {
+    //     console.log(req.body, req.files);
+    //     res.send("IT WORKDED");
+    // })
     
 
 // this line needs to go before /:id, or it will be considered as an id

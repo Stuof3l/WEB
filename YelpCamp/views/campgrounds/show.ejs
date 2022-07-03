@@ -4,7 +4,9 @@
         <!-- offset-md-1 -->
         <div class="col-6">
             <div class="card mb-3">
-                <img src="<%= campground.image%>" class="card-img-top h-50" alt="Campground Image">
+                <% for(let img of campground.images) { %>
+                    <img src="<%= img.url %>" class="card-img-top h-50" alt="Campground Image">
+                <% } %>
                 <div class="card-body">
                     <h5 class="card-title">
                         <%= campground.title%>
