@@ -4,14 +4,21 @@ const Review = require('./review');
 // and defines the shape of the documents within that collection.
 const Schema = mongoose.Schema;
 
+const ImageSchema = new Schema({
+    url: String,
+    filename: String
+})
+// use mongoose virtuals to change the url to get thumbnail
+// Virtuals are document properties that do not persist or get stored in the MongoDB database, they only exist logically and are not written to the document’s collection.
+// Setting virtual property using get method
+// cloudinary API
+ImageSchema.virtual('thumbnail').get(function () {
+    return this.url.replace('/upload', '/upload/w_200');
+})
+
 const CampgoundSchema = new Schema({
     title: String,
-    images: [
-        {
-            url: String,
-            filename: String
-        }
-    ],
+    images: [ImageSchema],
     price: Number,
     description: String,
     location: String,
@@ -29,7 +36,7 @@ const CampgoundSchema = new Schema({
 
 // Delete reviews when deleting pages
 CampgoundSchema.post('findOneAndDelete', async function (doc) {
-    if(doc) {
+    if (doc) {
         await Review.remove({
             _id: {
                 $in: doc.reviews
