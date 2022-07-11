@@ -19,6 +19,18 @@ ImageSchema.virtual('thumbnail').get(function () {
 const CampgoundSchema = new Schema({
     title: String,
     images: [ImageSchema],
+    // GeoJSON is a format for storing geographic points and polygons
+    geometry: {
+        type: {
+            type: String, // Don't do `{ location: { type: String } }`
+            enum: ['Point'], // 'location.type' must be 'Point'
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
     price: Number,
     description: String,
     location: String,
