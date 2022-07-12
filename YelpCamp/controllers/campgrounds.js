@@ -25,6 +25,7 @@ module.exports.createCampground = async (req, res, next) => {
     const campground = new Campground(req.body.campground);
     // latitude and longtitude
     campground.geometry = geoData.body.features[0].geometry;
+    // could have error checking here
     campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     campground.author = req.user._id;
     await campground.save();
