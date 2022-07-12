@@ -16,6 +16,8 @@ ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200');
 })
 
+const opts = { toJSON: { virtuals: true } };
+
 const CampgoundSchema = new Schema({
     title: String,
     images: [ImageSchema],
@@ -44,6 +46,10 @@ const CampgoundSchema = new Schema({
             ref: 'Review'
         }
     ]
+}, opts);
+// Custom Popups
+CampgoundSchema.virtual('properties.popUpMarkup').get(function () {
+    return ` <strong><a href="/campgrounds/${this._id}">${this.title}</a><strong> <p>${this.location.substring(0, 30)}...</p>`
 });
 
 // Delete reviews when deleting pages
