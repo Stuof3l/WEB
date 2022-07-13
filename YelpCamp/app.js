@@ -23,6 +23,8 @@ const User = require("./models/user");
 const userRoutes = require("./routes/users");
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
+// express-mongo-sanitize searches for any keys in objects that begin with a $ sign or contain a ., from req.body, req.query or req.params.
+const mongoSanitize = require('express-mongo-sanitize');
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
   useNewUrlParser: true,
@@ -45,6 +47,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(mongoSanitize());
 
 const sessionConfig = {
   // The session secret is a key used for signing and/or encrypting cookies set by the application to maintain session state.
