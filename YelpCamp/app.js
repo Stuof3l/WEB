@@ -25,6 +25,8 @@ const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 // express-mongo-sanitize searches for any keys in objects that begin with a $ sign or contain a ., from req.body, req.query or req.params.
 const mongoSanitize = require('express-mongo-sanitize');
+// Helmet helps you secure your Express apps by setting various HTTP headers
+const helmet = require("helmet");
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
   useNewUrlParser: true,
@@ -48,8 +50,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize());
+// app.use(helmet()); // Helmet is Express middleware
 
 const sessionConfig = {
+  name: 'session',
   // The session secret is a key used for signing and/or encrypting cookies set by the application to maintain session state.
   // In practice, this is often what prevents users from pretending to be someone they’re not -- ensuring that random person on the internet cannot access your application as an administrator.
   secret: "secretOfNeilll",
@@ -63,6 +67,62 @@ const sessionConfig = {
     maxAge: 1000 * 60 * 24 * 7,
   },
 };
+
+// app.use(helmet());
+// safari doesn't support src
+const scriptSrcUrls = [
+  "https://stackpath.bootstrapcdn.com/",
+  "https://api.tiles.mapbox.com/",
+  "https://api.mapbox.com/",
+  "https://kit.fontawesome.com/",
+  "https://cdnjs.cloudflare.com/",
+  "https://cdn.jsdelivr.net/",
+  "https://res.cloudinary.com/YOUR_CLOUDINARY_ACCOUNT/"
+];
+const styleSrcUrls = [
+  "https://kit-free.fontawesome.com/",
+  "https://stackpath.bootstrapcdn.com/",
+  "https://api.mapbox.com/",
+  "https://api.tiles.mapbox.com/",
+  "https://fonts.googleapis.com/",
+  "https://use.fontawesome.com/",
+  "https://cdn.jsdelivr.net/",
+  "https://res.cloudinary.com/YOUR_CLOUDINARY_ACCOUNT/"
+];
+const connectSrcUrls = [
+  "https://*.tiles.mapbox.com",
+  "https://api.mapbox.com",
+  "https://events.mapbox.com",
+  "https://res.cloudinary.com/YOUR_CLOUDINARY_ACCOUNT/"
+];
+const fontSrcUrls = [ "https://res.cloudinary.com/YOUR_CLOUDINARY_ACCOUNT/" ];
+
+app.use(
+  helmet({
+      contentSecurityPolicy: {
+          directives : {
+              defaultSrc : [],
+              connectSrc : [ "'self'", ...connectSrcUrls ],
+              scriptSrc  : [ "'unsafe-inline'", "'self'", ...scriptSrcUrls ],
+              styleSrc   : [ "'self'", "'unsafe-inline'", ...styleSrcUrls ],
+              workerSrc  : [ "'self'", "blob:" ],
+              objectSrc  : [],
+              imgSrc     : [
+                  "'self'",
+                  "blob:",
+                  "data:",
+                  "https://res.cloudinary.com/stuof3l/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT!
+                  "https://images.unsplash.com/"
+              ],
+              fontSrc    : [ "'self'", ...fontSrcUrls ],
+              mediaSrc   : [ "https://res.cloudinary.com/dlzez5yga/" ],
+              childSrc   : [ "blob:" ]
+          }
+      },
+      crossOriginEmbedderPolicy: false
+  })
+);
+
 app.use(session(sessionConfig));
 app.use(flash());
 
