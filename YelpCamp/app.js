@@ -32,7 +32,7 @@ const MongoStore = require('connect-mongo');
 
 // MongoDB Cloud
 // const dbUrl = process.env.DB_URL;
-const dbUrl = "mongodb://localhost:27017/yelp-camp";
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelp-camp";
 
 mongoose.connect(dbUrl, {
   useNewUrlParser: true,
@@ -57,12 +57,15 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize());
 
+const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
+
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   // Don't resave all the session on database every single time that the user refresh the page, you can lazy update the session, by limiting a period of time.
   touchAfter: 24 * 60 * 60,
   crypto: {
-      secret: "secretOfNeilll"
+      // secret: secret
+      secret
   }
 });
 
@@ -77,7 +80,8 @@ const sessionConfig = {
   name: 'session',
   // The session secret is a key used for signing and/or encrypting cookies set by the application to maintain session state.
   // In practice, this is often what prevents users from pretending to be someone they’re not -- ensuring that random person on the internet cannot access your application as an administrator.
-  secret: "secretOfNeilll",
+  // secret: "secretOfNeilll",
+  secret,
   // Forces the session to be saved back to the session store, even if the session was never modified during the request.
   // Typically false
   resave: false,
