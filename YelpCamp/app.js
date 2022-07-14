@@ -28,6 +28,8 @@ const mongoSanitize = require('express-mongo-sanitize');
 // Helmet helps you secure your Express apps by setting various HTTP headers
 const helmet = require("helmet");
 
+const dbUrl = process.env.DB_URL;
+// "mongodb://localhost:27017/yelp-camp"
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
   useNewUrlParser: true,
   // useCreateIndex: true,
