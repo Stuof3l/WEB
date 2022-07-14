@@ -27,10 +27,14 @@ const reviewRoutes = require("./routes/reviews");
 const mongoSanitize = require('express-mongo-sanitize');
 // Helmet helps you secure your Express apps by setting various HTTP headers
 const helmet = require("helmet");
+// session store
+const MongoStore = require('connect-mongo');
 
-const dbUrl = process.env.DB_URL;
-// "mongodb://localhost:27017/yelp-camp"
-mongoose.connect("mongodb://localhost:27017/yelp-camp", {
+// MongoDB Cloud
+// const dbUrl = process.env.DB_URL;
+const dbUrl = "mongodb://localhost:27017/yelp-camp";
+
+mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   // useCreateIndex: true,
   useUnifiedTopology: true,
@@ -52,9 +56,24 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize());
-// app.use(helmet()); // Helmet is Express middleware
 
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  // Don't resave all the session on database every single time that the user refresh the page, you can lazy update the session, by limiting a period of time.
+  touchAfter: 24 * 60 * 60,
+  crypto: {
+      secret: "secretOfNeilll"
+  }
+});
+
+store.on('error', function(e) {
+  console.log("SESSION STORE ERROR", e)
+})
+
+// session data: The set of session variables held on a server that allow the continuation of a conversation with the client without the need to continually reinput data.
 const sessionConfig = {
+  // use mongo to store session information
+  store,
   name: 'session',
   // The session secret is a key used for signing and/or encrypting cookies set by the application to maintain session state.
   // In practice, this is often what prevents users from pretending to be someone they’re not -- ensuring that random person on the internet cannot access your application as an administrator.
